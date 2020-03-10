@@ -1,4 +1,5 @@
 import time
+import _thread as th
 from machine import Pin, PWM
 import display
 from utils import avg, list_max
@@ -8,23 +9,56 @@ from secrets import DEVICE_ID
 from PID import PID
 from PID import PIDParams
 
-def main():
-    settings = {}
-    last_telemetry_time = 0
-    last_grill = 0
-    last_probe = [0, 0]
+lock = th.allocate_lock()
+telemetry = {}
+settings = {
+    "grillTarget": 177,
+    "probeTargets": [0, 0],
+    "probeIcons": [],
+    "probeNames": ['', '']}
+last_grill = 0
+last_probe = [0, 0]
+continue_loop = True
+
+def server_thread():
+    global lock
+    global telemetry
+    global settings
+    global last_grill
+    global last_probe
     max_telemetry_time_ms = 60 * 1000
+    last_telemetry_time = time.ticks_ms() 
+
+    while continue_loop:
+        t_delta = time.ticks_ms() - last_telemetry_time
+        with lock:
+            local_telemetry = telemetry.copy()
+
+        if len(local_telemetry) or t_delta >= max_telemetry_time_ms:
+            print({'telemetry': local_telemetry})
+            response = device_update_server(id=DEVICE_ID, telemetry=local_telemetry)
+            print(response)
+            if response:
+                with lock:
+                    last_grill = response['result']['telemetry']['grill'] # telemetry['grill']
+                    for i in range(0, 2):
+                        last_probe[i] = response['result']['telemetry']['probes'][i]
+                    settings = response['result']['settings']
+                    last_telemetry_time = time.ticks_ms()
+                    telemetry.clear()
+        time.sleep(1)
+    print('server loop finished')
+
+def main():
+    global lock
+    global telemetry
+    global settings
+    global last_grill
+    global last_probe
     max_telemetry = 10
     grill_target = 150
-    settings = {
-        "grillTarget": 177,
-        "probeTargets": [0, 0],
-        "probeIcons": [],
-        "probeNames": ['', '']
-    }
     grill_list = []
     probe_list = [[], []]
-    last_telemetry_time = time.ticks_ms() 
 
     kP= 5 # 1.5
     kI= 1 # .02
@@ -42,8 +76,10 @@ def main():
     pwm.freq(500)
     pwm.duty(0)
 
+    th.start_new_thread(server_thread, ())
+
     cnt = 0
-    while True:
+    while continue_loop:
         cnt += 1
         t_start = time.ticks_ms()
         probe = [0, 0]
@@ -64,29 +100,21 @@ def main():
         for i in range(0, 2):
             probe[i] = avg(probe_list[i], 0) or 0
 
-        telemetry = {}
-        if not int(grill) == int(last_grill):
-            telemetry['grill'] = grill
-        for i in range(0, 2):
-            if not int(probe[i]) == int(last_probe[i]):
-                telemetry['probes'] = telemetry.get('probes', last_probe.copy()) 
-                telemetry['probes'][i] = probe[i]
+        with lock:
+            if not int(grill) == int(last_grill):
+                telemetry['grill'] = grill
+                telemetry['pwm'] = pidParams.output
 
-        t_delta = time.ticks_ms() - last_telemetry_time
-        if len(telemetry) or t_delta >= max_telemetry_time_ms:
-            print({'telemetry': telemetry})
-            telemetry['pwm'] = pidParams.output
-            response = device_update_server(id=DEVICE_ID, telemetry=telemetry)
-            print(response)
-            if response:
-                last_grill = grill
-                for i in range(0, 2):
-                    last_probe[i] = probe[i]
-                settings = response['result']['settings']
-                grill_target = settings['grillTarget']
-                last_telemetry_time = time.ticks_ms()
+            for i in range(0, 2):
+                if not int(probe[i]) == int(last_probe[i]):
+                    telemetry['probes'] = telemetry.get('probes', last_probe.copy()) 
+                    telemetry['probes'][i] = probe[i]
+                    telemetry['pwm'] = pidParams.output
 
-        
+            grill_target = settings['grillTarget']
+            probe_target = settings['probeTargets']
+            probe_names = settings['probeNames']
+
     # PID
         pidParams.setpoint = grill_target
         pidParams.input = grill
@@ -96,9 +124,7 @@ def main():
     # Update display
         t_delta = time.ticks_ms() - t_start
         print('loop time before display', t_delta)
-        probe_target = settings['probeTargets']
-        probe_names = settings['probeNames']
-       
+        
         if cnt % 2 == 1:
             probe_msgs = [str(int(probe_target[0])), str(int(probe_target[1]))]
         else:
@@ -122,5 +148,6 @@ def main():
         t_delta = time.ticks_ms() - t_start
         print('loop time', t_delta)
         time.sleep_ms(1000 - t_delta)
+    print('main loop finished')
 
 main()
