@@ -82,7 +82,7 @@ export default {
       this.$router.push({ name: 'Login' })
     },
     doConnectDevice () {
-      console.log('hello')
+      this.leftDrawerOpen = false
     }
   }
 }
