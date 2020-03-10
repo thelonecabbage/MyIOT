@@ -1,6 +1,6 @@
 # https://micropython-oled.readthedocs.io/en/latest/content/getting_started.html#font-awesome
 from machine import Pin, I2C
-from oled import Write, GFX, SSD1306_I2C
+from oled.lazy import Write, GFX, SSD1306_I2C
 from oled.fonts import ubuntu_mono_15 # , ubuntu_mono_20
 
 width = 128
@@ -15,7 +15,7 @@ gfx = GFX(width, height, oled.pixel)
 write15 = Write(oled, ubuntu_mono_15)
 
 def clear():
-    gfx.fill_rect(0,0, width, height, 0) # clear screen
+    oled.fill(0) # clear screen
 
 def row_display(lines = [], color=1):
     row_height = int(height / len(lines))

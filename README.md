@@ -1,34 +1,15 @@
 # grillporn
 
-## Project setup
+## Device setup
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+...
 ```
 
-### Compiles and minifies for production
+## Heroku Deploy
 ```
-npm run build
+heroku git:remote -a <app_name>
+heroku config:set NPM_CONFIG_PRODUCTION=false --app <app_name>
+heroku buildpacks:add heroku/nodejs --app <app_name>
+heroku buildpacks:add https://github.com/heroku/heroku-buildpack-static.git --app <app_name>
+git push heroku master
 ```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -94,6 +94,8 @@ def main():
         pwm.duty(int(pidParams.output))
         print('PWM set', res, pidParams.setpoint, pidParams.input, pidParams.output)
     # Update display
+        t_delta = time.ticks_ms() - t_start
+        print('loop time before display', t_delta)
         probe_target = settings['probeTargets']
         probe_names = settings['probeNames']
        
@@ -104,8 +106,8 @@ def main():
         
         display.clear()
         lines = [
-            ['C', str(int(grill)), str(int(probe[0])), str(int(probe[1]))],
-            ['Set', str(int(grill_target)), probe_msgs[0], probe_msgs[1]]
+            ['C', '', str(int(probe[0])), str(int(probe[1]))],
+            ['Set', '' , probe_msgs[0], probe_msgs[1]]
         ]
         alt_lines = [
             ['', str(int(grill)), '', ''],
@@ -118,6 +120,7 @@ def main():
 
         # compensate time, to keep 1s intervals
         t_delta = time.ticks_ms() - t_start
+        print('loop time', t_delta)
         time.sleep_ms(1000 - t_delta)
 
 main()

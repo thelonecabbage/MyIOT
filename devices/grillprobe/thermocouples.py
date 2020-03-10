@@ -19,6 +19,7 @@ for cs in cs_list:
 
 telemetry_ticks_ms = 0
 def get_telemetry():
+    global telemetry_ticks_ms
     t_start = time.ticks_ms()
     telemetry = []
     for mx in mx6675:
