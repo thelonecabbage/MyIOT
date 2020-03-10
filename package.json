@@ -1,6 +1,9 @@
 {
   "name": "grillporn",
-  "engines" : { "node" : ">=10.17" },
+  "engines": {
+    "node": ">=10.17",
+    "npm": ">=6.11.3"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,6 +20,7 @@
     "apexcharts": "^3.16.0",
     "core-js": "^3.6.4",
     "lodash": "^4.17.15",
+    "parse": "^2.11.0",
     "quasar": "^1.0.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
