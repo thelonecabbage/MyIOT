@@ -60,15 +60,15 @@ def main():
     grill_list = []
     probe_list = [[], []]
 
-    kP= 5 # 1.5
-    kI= 1 # .02
-    kD= 5 # 10
+    kP= 1.5 # 5 # 1.5
+    kI= 0.2 # 1 # .02
+    kD= 10 # 5 # 10
     fanMin = 0
     fanMax = 1023
 
     pidParams = PIDParams(input=0, output=0, setpoint=grill_target)
     pid = PID(params=pidParams, kP=kP, kI=kI, kD=kD)
-    pid.setOutputLimits(200, 1023)
+    pid.setOutputLimits(0, 1023)
     pid.setMode(PID.AUTOMATIC)
 
     p16 = Pin(16)
