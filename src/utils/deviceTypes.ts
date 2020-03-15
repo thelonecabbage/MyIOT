@@ -1,4 +1,4 @@
-import GrillProbe from '@/components/GrillProbe'
+import GrillProbe from '@/components/GrillProbe.vue'
 export default {
   grillprobe: {
     icon: 'outdoor_grill',
