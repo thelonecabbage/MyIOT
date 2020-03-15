@@ -146,8 +146,8 @@ export default Vue.extend({
     tempColor () {
       // const { target, setTarget, temp } = <{ target: number, setTarget: number, temp: number }> this
       const target: number = this.target
-      const setTarget: number = this.setTarget
-      const temp: number = this.temp
+      // const setTarget: number = this.setTarget
+      // const temp: number = this.temp
       // const target = this.setTarget || this.target
       const delta = target - this.temp as number
       let colorIdx = Math.min(4, Math.round((100 * this.temp / target) / 25)) - 1

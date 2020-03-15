@@ -1,18 +1,14 @@
 {
   "name": "grillporn",
-  "engines": {
-    "node": ">=10.17",
-    "npm": ">=6.11.3"
-  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "heroku-postbuild": "vue-cli-service build --mode production",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "heroku-postbuild": "vue-cli-service build --mode production"
   },
   "dependencies": {
     "@quasar/cli": "^1.0.5",
@@ -38,7 +34,7 @@
     "@vue/cli-plugin-babel": "~4.2.0",
     "@vue/cli-plugin-e2e-nightwatch": "~4.2.0",
     "@vue/cli-plugin-eslint": "~4.2.0",
-    "@vue/cli-plugin-pwa": "~4.2.0",
+    "@vue/cli-plugin-pwa": "^4.2.3",
     "@vue/cli-plugin-router": "~4.2.0",
     "@vue/cli-plugin-typescript": "~4.2.0",
     "@vue/cli-plugin-unit-jest": "~4.2.0",
@@ -62,5 +58,9 @@
     "typescript": "~3.7.5",
     "vue-cli-plugin-quasar": "~2.0.0",
     "vue-template-compiler": "^2.6.11"
+  },
+  "engines": {
+    "node": ">=10.17",
+    "npm": ">=6.11.3"
   }
 }
