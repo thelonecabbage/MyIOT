@@ -10,6 +10,7 @@
         :min="0"
         :max="max"
         :size="`${size}px`"
+        :readonly="locked"
         :thickness="0.225"
         color="primary"
         track-color="grey-3">
@@ -63,6 +64,7 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
+      <q-icon :name="locked ? 'lock' : 'lock_open'" size="25px" class="absolute-bottom-left" @click="locked=!locked"/>
     </div>
 </template>
 <script lang="ts">
@@ -124,7 +126,8 @@ export default Vue.extend({
     editName: '',
     editIcon: '',
     editModal: false,
-    icons
+    icons,
+    locked: true
   }),
   methods: {
     updateTarget (ev) {
@@ -135,7 +138,7 @@ export default Vue.extend({
       return `fa fa-${name}`
     },
     openModal () {
-      if (this.editable) {
+      if (this.editable && !this.locked) {
         this.editIcon = this.icon
         this.editName = this.name
         this.editModal = true

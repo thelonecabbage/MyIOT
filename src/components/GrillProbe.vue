@@ -7,7 +7,8 @@
       :target="settings.grillTarget"
       :max="settings.grillMax"
       icon="thermometer-half"
-      @update:target="updateGrillTarget"/>
+      @update:target="updateGrillTarget"
+      class="q-ma-md"/>
     <div class="text-center">
       <temp-control
         v-for="(probe, $index) in probeSeries" :key="probe.key"
@@ -19,7 +20,19 @@
         :size="200"
         editable
         @update:target="updateProbeTarget($index, $event)"
-        @update:nameicon="updateProbeNameIcon($index, $event)"/>
+        @update:nameicon="updateProbeNameIcon($index, $event)"
+        class="q-ma-md"/>
+    </div>
+    <div class="row q-ma-xl">
+      <div class="col-1">
+        <q-icon name="fa fa-fan" class="" size="20px" left/>
+        <q-icon name="fa fa-wind" class="" size="20px" left/>
+      </div>
+      <q-linear-progress stripe rounded size="20px" :value="telemetry.pwm / 1023" color="orange" class="col" >
+        <div class="absolute-full flex flex-center">
+          <q-badge color="white" text-color="orange" :label="(100 * telemetry.pwm / 1023).toFixed(2) + '%'" />
+        </div>
+      </q-linear-progress>
     </div>
   </div>
 </template>
