@@ -13,7 +13,7 @@
   "dependencies": {
     "@quasar/cli": "^1.0.5",
     "@quasar/extras": "^1.0.0",
-    "apexcharts": "^3.16.0",
+    "apexcharts": "^3.24.0",
     "core-js": "^3.6.4",
     "lodash": "^4.17.15",
     "parse": "^2.11.0",
