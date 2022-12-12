@@ -11,7 +11,7 @@
     "heroku-postbuild": "vue-cli-service build --mode production"
   },
   "dependencies": {
-    "@quasar/cli": "^1.0.5",
+    "@quasar/cli": "^1.3.2",
     "@quasar/extras": "^1.0.0",
     "apexcharts": "^3.16.0",
     "core-js": "^3.6.4",
